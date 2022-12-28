@@ -1,0 +1,32 @@
+org: jeantg
+app: aws-node-http-api-project
+service: aws-node-http-api-project
+frameworkVersion: "3"
+
+provider:
+  name: aws
+  runtime: nodejs14.x
+  environment:
+    DATABASE_URL: ${env:DATABASE_URL}
+    SHADOW_DATABASE_URL: ${env:SHADOW_DATABASE_URL}
+
+functions:
+  init:
+    handler: src/handlers/index.handler
+    events:
+      - httpApi:
+          path: /users
+          method: get
+plugins:
+  - serverless-plugin-typescript
+  - serverless-offline
+
+custom:
+  serverless-offline:
+    httpPort: 4000
+package:
+  patterns:
+    - "!node_modules/.prisma/client/libquery_engine-*"
+    - "node_modules/.prisma/client/libquery_engine-rhel-*"
+    - "!node_modules/prisma/libquery_engine-*"
+    - "!node_modules/@prisma/engines/**"
